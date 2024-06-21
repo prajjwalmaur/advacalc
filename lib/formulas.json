@@ -1,9 +1,0 @@
-[
-    {
-        "var": [
-            "Length",
-            "Width"
-        ],
-        "exp": "2*(Length+Width)"
-    }
-]

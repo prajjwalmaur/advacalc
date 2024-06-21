@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _variableController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String userInput = "";
-  String result = "";
+  String result = "0";
   Map<String, dynamic> data = {};
   bool mode = false;
   List<dynamic> buttons = [
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
     if (_formKey.currentState!.validate()) {
       data[_variableController.text] = result;
       _pref.setString("data", jsonEncode(data));
+      _variableController.clear();
       showCustomSnackBar(context, "Saved");
       return true;
     }
@@ -78,13 +80,19 @@ class _HomePageState extends State<HomePage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Enter the Name of Variable : '),
+              Text(
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                'Enter the Name of Variable : ',
+                style: TextStyle(fontSize: 15),
+              ),
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.red, width: 3),
                 ),
                 child: IconButton(
+                  iconSize: 15,
                   icon: Icon(Icons.close, color: Colors.red),
                   onPressed: () {
                     Navigator.of(context).pop(false);
@@ -94,7 +102,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           content: SizedBox(
-            height: 300,
+            height: 120,
             width: MediaQuery.of(context).size.width - 40,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -124,7 +132,17 @@ class _HomePageState extends State<HomePage> {
                       return null;
                     },
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                AutoSizeText(
+                  minFontSize: 12,
+                  maxFontSize: 20,
+                  overflow: TextOverflow.ellipsis,
+                  "Value : ${result}",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
               ],
             ),
           ),
@@ -202,7 +220,42 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double buttonHeight = MediaQuery.of(context).size.height / 12;
+    double buttonWidth = MediaQuery.of(context).size.width / 4;
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const AutoSizeText(
+              minFontSize: 10,
+              maxFontSize: 20,
+              overflow: TextOverflow.ellipsis,
+              "Switch to Advance mode : ",
+              style: TextStyle(color: Colors.white),
+            ),
+            Switch(
+              value: mode,
+              inactiveThumbColor: Colors.red,
+              inactiveTrackColor: Colors.white,
+              activeColor: Colors.white,
+              activeTrackColor: Colors.green,
+              onChanged: (bool value) {
+                if (value) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AdvancePage()));
+                }
+              },
+            ),
+          ],
+        ),
+      ),
       backgroundColor: Colors.black,
       body: PopScope(
         canPop: false,
@@ -212,101 +265,88 @@ class _HomePageState extends State<HomePage> {
           }
           _showBackDialog();
         },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Switch to Advance mode : ",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                      Switch(
-                        value: mode,
-                        inactiveThumbColor: Colors.red,
-                        inactiveTrackColor: Colors.white,
-                        activeColor: Colors.white,
-                        activeTrackColor: Colors.green,
-                        onChanged: (bool value) {
-                          if (value) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AdvancePage()));
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    alignment: Alignment.centerRight,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        userInput,
-                        style: TextStyle(fontSize: 32, color: Colors.white),
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      alignment: Alignment.centerRight,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: AutoSizeText(
+                          minFontSize: 15,
+                          maxFontSize: 20,
+                          overflow: TextOverflow.ellipsis,
+                          userInput,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Container(
-                            padding: EdgeInsets.all(20),
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              result,
-                              style:
-                                  TextStyle(fontSize: 40, color: Colors.white),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Container(
+                              padding: EdgeInsets.all(20),
+                              alignment: Alignment.centerRight,
+                              child: AutoSizeText(
+                                softWrap: true,
+                                minFontSize: 15,
+                                maxFontSize: 20,
+                                overflow: TextOverflow.ellipsis,
+                                result,
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                          iconSize: 40,
-                          onPressed: () {
-                            _showStartDialog();
-                          },
-                          icon: Icon(Icons.download)),
-                    ],
-                  ),
-                ],
+                        IconButton(
+                            // iconSize: 40,
+                            onPressed: () {
+                              _showStartDialog();
+                            },
+                            icon: Icon(Icons.download)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Divider(
-              color: Colors.white,
-            ),
-            Expanded(
-              child: Container(
+              Divider(
+                color: Colors.white,
+              ),
+              Expanded(
+                child: Container(
                   padding: EdgeInsets.all(10),
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12),
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: buttonWidth / buttonHeight,
+                    ),
                     itemCount: buttons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CustomBut(buttons[index]);
+                      return CustomBut(buttons[index], buttonHeight);
                     },
-                  )),
-            )
-          ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget CustomBut(String text) {
+  Widget CustomBut(String text, double buttonHeight) {
     return InkWell(
       splashColor: Colors.cyan,
       onTap: () {
@@ -328,10 +368,10 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         child: Center(
-          child: Text(
+          child: AutoSizeText(
             text,
             style: TextStyle(
-                fontSize: 30,
+                fontSize: buttonHeight / 2,
                 fontWeight: FontWeight.bold,
                 color: getColor(text)),
           ),
@@ -393,7 +433,9 @@ class _HomePageState extends State<HomePage> {
       var eval = exp.evaluate(EvaluationType.REAL, ContextModel());
       return eval.toString();
     } catch (e) {
-      return e.toString();
+      showCustomSnackBar(context, e.toString());
+      print(e.toString());
+      return "Not valid !!!";
     }
   }
 }

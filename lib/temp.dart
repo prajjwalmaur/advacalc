@@ -8,26 +8,7 @@ import 'package:math_expressions/math_expressions.dart';
 ///  - Example 3: Custom function definition and use (function bound to expression)
 ///  - Example 4: Generic function definition and use (function bound to Dart handler)
 void main() {
-  Map<String, double> d = {"ha": 98};
-  // print(d["hak"]);
-
-  // Define the string
-  String str = "9+radius*height/4";
-
-  // Use regular expression to find words (sequences of alphabetic characters)
-  RegExp regExp = RegExp(r'[a-zA-Z]+');
-  Iterable<Match> matches = regExp.allMatches(str);
-
-  // Extract words from matches
-  List<String> words = [];
-  for (Match match in matches) {
-    words.add(match.group(0)!);
-  }
-
-  // Print the extracted words
-  print(words);
-
-  // _expression_creation_and_evaluation();
+  _expression_creation_and_evaluation();
   // _expression_simplification_and_differentiation();
   // _custom_function_definition_and_use();
   // _algorithmic_function_definition_and_use();
@@ -40,24 +21,12 @@ void main() {
 void _expression_creation_and_evaluation() {
   print('\nExample 1: Expression creation and evaluation\n');
 
-  // You can either create an mathematical expression programmatically or parse
-  // a string.
-  // (1a) Parse expression:
   Parser p = Parser();
-  Expression exp = p.parse('(x^2 + cos(y)) / 3');
+  Expression exp = p.parse('exp(2,6)');
 
-  // (1b) Build expression: (x^2 + cos(y)) / 3
-  // Variable x = Variable('x'), y = Variable('y');
-  // Power xSquare = Power(x, 2);
-  // Cos yCos = Cos(y);
-  // Number three = Number(3.0);
-  // exp = (xSquare + yCos) / three;
-
-  // Bind variables and evaluate the expression as real number.
-  // (2) Bind variables:
-  ContextModel cm = ContextModel()
-    ..bindVariable(Variable('x'), Number(2.0))
-    ..bindVariable(Variable('y'), Number(math.pi));
+  ContextModel cm = ContextModel();
+  // ..bindVariable(Variable('x'), Number(2.0))
+  // ..bindVariable(Variable('y'), Number(math.pi));
 
   // (3) Evaluate expression:
   double eval = exp.evaluate(EvaluationType.REAL, cm);

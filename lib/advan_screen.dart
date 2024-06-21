@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/drawer.dart';
+import 'package:advacalc/help_screen.dart';
 import 'package:advacalc/snakbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -28,6 +30,26 @@ class _AdvancePageState extends State<AdvancePage> {
 
   bool click = false;
 
+  final Set<String> knownFunctions = {
+    'π',
+    'nrt',
+    '!',
+    'sqrt',
+    'log',
+    'cos',
+    'sin',
+    'tan',
+    'arccos',
+    'arcsin',
+    'arctan',
+    'abs',
+    'ceil',
+    'floor',
+    'sgn',
+    'ln',
+    'e',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +70,7 @@ class _AdvancePageState extends State<AdvancePage> {
       try {
         // Parse the expression
         Expression expression = parser.parse(_expController.text);
+        print("fs");
 
         // Define the variables in a context model
         ContextModel cm = ContextModel();
@@ -73,13 +96,21 @@ class _AdvancePageState extends State<AdvancePage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Enter the Name of Variable : '),
+              const Text(
+                'Enter the Name of Variable : ',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
               Container(
+                // width: 20,
+                // height: 20,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.red, width: 3),
+                  border: Border.all(color: Colors.red, width: 2),
                 ),
                 child: IconButton(
+                  iconSize: 15,
                   icon: Icon(Icons.close, color: Colors.red),
                   onPressed: () {
                     Navigator.of(context).pop(false);
@@ -89,7 +120,7 @@ class _AdvancePageState extends State<AdvancePage> {
             ],
           ),
           content: SizedBox(
-            height: 300,
+            height: 120,
             width: MediaQuery.of(context).size.width - 40,
             child: Column(
               children: [
@@ -118,7 +149,12 @@ class _AdvancePageState extends State<AdvancePage> {
                       return null;
                     },
                   ),
-                )
+                ),
+                Text(
+                  "Value : ${result}",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  softWrap: true,
+                ),
               ],
             ),
           ),
@@ -207,6 +243,14 @@ class _AdvancePageState extends State<AdvancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          softWrap: true,
+          "Expression Calculator 🧮",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+      ),
       body: PopScope(
         canPop: false,
         onPopInvoked: (bool didPop) {
@@ -224,17 +268,6 @@ class _AdvancePageState extends State<AdvancePage> {
               children: [
                 SizedBox(
                   height: 20,
-                ),
-                const Text(
-                  softWrap: true,
-                  "Expression Calculator 🧮",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue),
-                ),
-                SizedBox(
-                  height: 10,
                 ),
                 Container(
                   margin: EdgeInsets.all(10),
@@ -282,7 +315,14 @@ class _AdvancePageState extends State<AdvancePage> {
                       ),
                       Text(
                         softWrap: true,
-                        "4. Parentheses brackets ( ) ",
+                        "4. Brackets: (), {} ",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: const Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                      Text(
+                        softWrap: true,
+                        "5. Function: log(), sin(), sqrt()...",
                         style: TextStyle(
                             fontSize: 16,
                             color: const Color.fromARGB(255, 0, 0, 0)),
@@ -294,6 +334,47 @@ class _AdvancePageState extends State<AdvancePage> {
                             fontSize: 16,
                             color: const Color.fromARGB(255, 0, 0, 0)),
                       ),
+                      RichText(
+                        text: new TextSpan(
+                          children: [
+                            new TextSpan(
+                              text: 'You can also take ',
+                              style: new TextStyle(color: Colors.black),
+                            ),
+                            new TextSpan(
+                              text: 'Help.',
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const HelpPage()),
+                                  );
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                      // ListTile(
+                      //   leading:
+                      //       const Icon(Icons.help_outline, color: Colors.white),
+                      //   title: const Text(
+                      //     'Help',
+                      //     style: const TextStyle(
+                      //         fontWeight: FontWeight.bold, color: Colors.white),
+                      //   ),
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => const HelpPage()),
+                      //     );
+                      //   },
+                      // ),
                     ],
                   ),
                 ),
@@ -340,7 +421,9 @@ class _AdvancePageState extends State<AdvancePage> {
                         // Extract words from matches
                         List<String> words = [];
                         for (Match match in matches) {
-                          words.add(match.group(0)!);
+                          if (!knownFunctions.contains(match.group(0)!)) {
+                            words.add(match.group(0)!);
+                          }
                         }
 
                         for (var i = 0; i < words.length; i++) {

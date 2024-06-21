@@ -142,23 +142,20 @@ class _StorePageState extends State<StorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          softWrap: true,
+          "Stored Variabes 📦",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+      ),
       body: Container(
         margin: EdgeInsets.all(10),
         child: Column(
           children: [
             SizedBox(
               height: 20,
-            ),
-            const Text(
-              softWrap: true,
-              "Stored Variabes 📦",
-              style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue),
-            ),
-            SizedBox(
-              height: 10,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -180,7 +177,7 @@ class _StorePageState extends State<StorePage> {
             Table(
               border: TableBorder.all(
                 color: Color.fromARGB(255, 198, 198, 198),
-                width: 4,
+                width: 2,
               ),
               children: [
                 TableRow(
@@ -232,7 +229,7 @@ class _StorePageState extends State<StorePage> {
                   return Table(
                     border: TableBorder.all(
                       color: Color.fromARGB(255, 198, 198, 198),
-                      width: 4,
+                      width: 2,
                     ),
                     children: [
                       TableRow(

@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:advacalc/bottom_nav.dart';
+import 'package:advacalc/cal_formula.dart';
 // import 'package:advacalc/cal_formula.dart';
 import 'package:advacalc/drawer.dart';
+import 'package:advacalc/help_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -23,6 +26,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> variables = [];
   String expression = "";
+  bool tryIt = false;
 
   @override
   void initState() {
@@ -43,21 +47,23 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
         Parser parser = Parser();
         Expression exp = parser.parse(expression);
         final Set<String> knownFunctions = {
+          'π',
+          'nrt',
+          '!',
           'sqrt',
-          'sin',
-          'cos',
-          'tan',
           'log',
-          'exp',
+          'cos',
+          'sin',
+          'tan',
+          'arccos',
+          'arcsin',
+          'arctan',
           'abs',
-          'acos',
-          'asin',
-          'atan',
           'ceil',
-          'cosh',
           'floor',
-          'sinh',
-          'tanh'
+          'sgn',
+          'ln',
+          'e',
         };
         RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
         Iterable<Match> matches = regExp.allMatches(expression);
@@ -110,6 +116,15 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          softWrap: true,
+          "Create Expression 📝",
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+      ),
       body: Container(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -118,14 +133,6 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                softWrap: true,
-                "Create Expression 📝",
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue),
-              ),
               SizedBox(
                 height: 20,
               ),
@@ -172,7 +179,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -219,6 +226,32 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                                 fontSize: 14,
                                 color: const Color.fromARGB(255, 0, 0, 0)),
                           ),
+                          RichText(
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                  text: 'You can also take ',
+                                  style: new TextStyle(color: Colors.black),
+                                ),
+                                new TextSpan(
+                                  text: 'Help.',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HelpPage()),
+                                      );
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -232,7 +265,15 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                               Column(
                                 children: [
                                   Text(
-                                    "Please give space before and after to Variable.",
+                                    "Please give space before",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                    softWrap: true,
+                                  ),
+                                  Text(
+                                    "and after to Variable.",
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15,
@@ -316,6 +357,26 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                               );
                             }),
                           ),
+                          const SizedBox(height: 20),
+                          if (!tryIt)
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    tryIt = true;
+                                  });
+                                },
+                                child: const Text(
+                                  'Try it',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          if (tryIt)
+                            CalFormulaPage(
+                                exp: _expController.text,
+                                title: _titleController.text,
+                                instuction: _instructionController.text),
                           const SizedBox(height: 20),
                           Center(
                             child: ElevatedButton(

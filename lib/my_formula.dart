@@ -36,17 +36,16 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          softWrap: true,
+          "My Formula Book 📖",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+      ),
       body: Column(
         children: [
-          SizedBox(
-            height: 20,
-          ),
-          const Text(
-            softWrap: true,
-            "My Formula Book 📖",
-            style: TextStyle(
-                fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
-          ),
           SizedBox(
             height: 20,
           ),

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:math' as math;
 import 'package:math_expressions/math_expressions.dart';
 
 class CalFormulaPage extends StatefulWidget {
@@ -36,21 +37,23 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
 
   void extractVariables() {
     final Set<String> knownFunctions = {
+      'π',
+      'nrt',
+      '!',
       'sqrt',
-      'sin',
-      'cos',
-      'tan',
       'log',
-      'exp',
+      'cos',
+      'sin',
+      'tan',
+      'arccos',
+      'arcsin',
+      'arctan',
       'abs',
-      'acos',
-      'asin',
-      'atan',
       'ceil',
-      'cosh',
       'floor',
-      'sinh',
-      'tanh'
+      'sgn',
+      'ln',
+      'e',
     };
     RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
     Iterable<Match> matches = regExp.allMatches(widget.exp);
@@ -86,6 +89,8 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
 
         // Define the variables in a context model
         ContextModel cm = ContextModel();
+        cm.bindVariable(Variable('π'), Number(math.pi));
+        // cm.bindVariable(Variable('e'), Number(math.e));
         variables.forEach((variable) {
           // Ensure the value is not null or empty before parsing
           String? value = _controllers[variable]?.text;
@@ -141,6 +146,7 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
                 Text(
                   "Formula used : ${widget.exp}",
                   style: TextStyle(fontWeight: FontWeight.bold),
+                  softWrap: true,
                 ),
                 if (click) const SizedBox(height: 10),
                 if (click) Text(widget.instuction),

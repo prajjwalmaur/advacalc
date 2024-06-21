@@ -1,4 +1,6 @@
+import 'package:advacalc/contact_screen.dart';
 import 'package:advacalc/create_formula.dart';
+import 'package:advacalc/help_screen.dart';
 import 'package:advacalc/my_formula.dart';
 import 'package:advacalc/stored_data.dart';
 import 'package:advacalc/term.dart';
@@ -132,6 +134,34 @@ class CustomDrawerState extends State<CustomDrawer> {
                   ),
                   onTap: () {
                     Share.share('Check out my website https://pathwalla.com');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.help_outline, color: Colors.white),
+                  title: const Text(
+                    'Help',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HelpPage()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.phone, color: Colors.white),
+                  title: const Text(
+                    'Contact Us',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ContactPage()),
+                    );
                   },
                 ),
                 ListTile(

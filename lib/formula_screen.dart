@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/cal_formula.dart';
 import 'package:advacalc/drawer.dart';
+import 'package:advacalc/snakbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -16,6 +17,7 @@ class FormulaPage extends StatefulWidget {
 class _FormulaPageState extends State<FormulaPage> {
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
+  int no = 0;
   List<dynamic> formulas = [
     {
       "title": "Parameter of Rectangle",
@@ -39,13 +41,19 @@ class _FormulaPageState extends State<FormulaPage> {
       return;
     }
 
-    final response = await http
-        .get(Uri.parse('https://meruprastaar.com/api/formula/formula.php'));
+    final response = await http.get(Uri.parse(
+        'https://meruprastaar.com/api/formula/formula.php?no=${no.toString()}'));
     if (response.statusCode == 200) {
-      List<dynamic> newFormulas = jsonDecode(response.body);
+      no += 1;
+      List<dynamic> newFormulas = await jsonDecode(response.body);
+      // print(newFormulas.toString());
+      // print(newFormulas[0].toString());
       setState(() {
-        formulas = newFormulas;
+        formulas.addAll(newFormulas);
       });
+      // print(formulas);
+    } else if (response.statusCode == 204) {
+      showCustomSnackBar(context, "All formula downloaded");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load formulas')),
@@ -56,16 +64,19 @@ class _FormulaPageState extends State<FormulaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          "Formula Book 📖",
+          softWrap: true,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+      ),
       body: Column(
         children: [
           SizedBox(height: 20),
-          const Text(
-            "Formula Book 📖",
-            softWrap: true,
-            style: TextStyle(
-                fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
-          ),
-          SizedBox(height: 20),
+
+          // SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextField(
