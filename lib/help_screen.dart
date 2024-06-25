@@ -11,6 +11,7 @@ class HelpPage extends StatefulWidget {
 
 class _HelpPageState extends State<HelpPage> {
   final Map<String, List<String>> symbol = {
+    "PI": ["π use for PI value 3.1415926..", "PI * 7^2\n= 153.938"],
     "x+a": ["For finding Addition of x to a", "7+2\n= 9"],
     "x-a": ["For finding Subtraction of x to a", "7-2\n= 5"],
     "x*a": ["For finding Multiplication x to a", "7*2\n= 14"],

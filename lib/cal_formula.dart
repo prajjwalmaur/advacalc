@@ -54,6 +54,7 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
       'sgn',
       'ln',
       'e',
+      "PI",
     };
     RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
     Iterable<Match> matches = regExp.allMatches(widget.exp);
@@ -90,6 +91,7 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
         // Define the variables in a context model
         ContextModel cm = ContextModel();
         cm.bindVariable(Variable('π'), Number(math.pi));
+        cm.bindVariable(Variable('PI'), Number(math.pi));
         // cm.bindVariable(Variable('e'), Number(math.e));
         variables.forEach((variable) {
           // Ensure the value is not null or empty before parsing

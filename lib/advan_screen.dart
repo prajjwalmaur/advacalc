@@ -3,11 +3,9 @@ import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/drawer.dart';
 import 'package:advacalc/help_screen.dart';
 import 'package:advacalc/snakbar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,6 +46,7 @@ class _AdvancePageState extends State<AdvancePage> {
     'sgn',
     'ln',
     'e',
+    "PI",
   };
 
   @override
@@ -70,7 +69,7 @@ class _AdvancePageState extends State<AdvancePage> {
       try {
         // Parse the expression
         Expression expression = parser.parse(_expController.text);
-        print("fs");
+        // print("fs");
 
         // Define the variables in a context model
         ContextModel cm = ContextModel();
@@ -111,7 +110,7 @@ class _AdvancePageState extends State<AdvancePage> {
                 ),
                 child: IconButton(
                   iconSize: 15,
-                  icon: Icon(Icons.close, color: Colors.red),
+                  icon: const Icon(Icons.close, color: Colors.red),
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
@@ -143,6 +142,9 @@ class _AdvancePageState extends State<AdvancePage> {
                       if (value!.isEmpty) {
                         return 'Variable Name can not Empty';
                       }
+                      if (value.contains(" ")) {
+                        return 'Variable Name contains Space';
+                      }
                       if (data[value] != null) {
                         return "Variable Name already exist with value ${data[value]}";
                       }
@@ -151,8 +153,8 @@ class _AdvancePageState extends State<AdvancePage> {
                   ),
                 ),
                 Text(
-                  "Value : ${result}",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "Value : $result",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                   softWrap: true,
                 ),
               ],
@@ -163,8 +165,8 @@ class _AdvancePageState extends State<AdvancePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 30), // Add some space between buttons
-                Container(
+                const SizedBox(height: 30), // Add some space between buttons
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 80,
                   // decoration: BoxDecoration(
                   //   color: Colors.green,
@@ -260,18 +262,18 @@ class _AdvancePageState extends State<AdvancePage> {
           _showBackDialog();
         },
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -284,66 +286,60 @@ class _AdvancePageState extends State<AdvancePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         softWrap: true,
                         "You can use following : ",
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                       ),
-                      Text(
+                      const Text(
                         softWrap: true,
                         "1. Numbers ",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
-                      Text(
+                      const Text(
                         softWrap: true,
                         "2. Variables names ",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
-                      Text(
+                      const Text(
                         softWrap: true,
                         "3. Operators ",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
-                      Text(
+                      const Text(
                         softWrap: true,
                         "4. Brackets: (), {} ",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
-                      Text(
+                      const Text(
                         softWrap: true,
                         "5. Function: log(), sin(), sqrt()...",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
-                      Text(
+                      const Text(
                         softWrap: true,
                         "E.g. : 2 * ( lenth + width ) ",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                       RichText(
-                        text: new TextSpan(
+                        text: TextSpan(
                           children: [
-                            new TextSpan(
+                            const TextSpan(
                               text: 'You can also take ',
-                              style: new TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.black),
                             ),
-                            new TextSpan(
+                            TextSpan(
                               text: 'Help.',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline),
@@ -378,11 +374,11 @@ class _AdvancePageState extends State<AdvancePage> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   child: Form(
                     key: _formKey,
                     child: TextFormField(
@@ -397,7 +393,7 @@ class _AdvancePageState extends State<AdvancePage> {
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors
                                 .blue, // Set border color when not focused
                             width: 2.0,
@@ -405,7 +401,7 @@ class _AdvancePageState extends State<AdvancePage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.blue, // Set border color when focused
                             width: 2.0,
                           ),
@@ -442,7 +438,7 @@ class _AdvancePageState extends State<AdvancePage> {
                 ),
                 const SizedBox(height: 10), // Add some space between buttons
                 Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   width: MediaQuery.of(context).size.width - 80,
                   child: ElevatedButton(
                     onPressed: () {
@@ -491,13 +487,13 @@ class _AdvancePageState extends State<AdvancePage> {
                           onPressed: () {
                             _showStartDialog();
                           },
-                          icon: Icon(Icons.download)),
+                          icon: const Icon(Icons.save)),
                     ],
                   ),
                 const SizedBox(height: 2),
-                if (variables.length > 0)
+                if (variables.isNotEmpty)
                   Container(
-                    margin: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     child: Column(
                       children: [
                         Container(
@@ -506,8 +502,8 @@ class _AdvancePageState extends State<AdvancePage> {
                             children: [
                               Expanded(
                                 child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: const BoxDecoration(
                                     color: Colors.blue,
                                     border: Border(
                                       top: BorderSide(
@@ -530,7 +526,7 @@ class _AdvancePageState extends State<AdvancePage> {
                                     // borderRadius:
                                     //     BorderRadius.circular(12), // Rounded corners
                                   ),
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       softWrap: true,
                                       "Vaiable",
@@ -543,8 +539,8 @@ class _AdvancePageState extends State<AdvancePage> {
                               ),
                               Expanded(
                                 child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: const BoxDecoration(
                                     color: Colors.blue,
                                     border: Border(
                                       top: BorderSide(
@@ -564,7 +560,7 @@ class _AdvancePageState extends State<AdvancePage> {
                                     // borderRadius:
                                     //     BorderRadius.circular(12), // Rounded corners
                                   ),
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                         softWrap: true,
                                         "Value",
@@ -585,8 +581,8 @@ class _AdvancePageState extends State<AdvancePage> {
                               children: [
                                 Expanded(
                                   child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: const BoxDecoration(
                                       border: Border(
                                         left: BorderSide(
                                             color: Color.fromARGB(
@@ -608,7 +604,7 @@ class _AdvancePageState extends State<AdvancePage> {
                                       child: Text(
                                         softWrap: true,
                                         key,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15),
                                       ),
@@ -617,8 +613,8 @@ class _AdvancePageState extends State<AdvancePage> {
                                 ),
                                 Expanded(
                                   child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: const BoxDecoration(
                                       border: Border(
                                         // left: BorderSide(color: Color.fromARGB(255, 198, 198, 198), width: 4),
                                         right: BorderSide(
@@ -637,7 +633,7 @@ class _AdvancePageState extends State<AdvancePage> {
                                       child: Text(
                                           softWrap: true,
                                           value.toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15)),
                                     ),
@@ -655,8 +651,8 @@ class _AdvancePageState extends State<AdvancePage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigation(),
-      endDrawer: CustomDrawer(),
+      bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const CustomDrawer(),
     );
   }
 }

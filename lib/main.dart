@@ -1,6 +1,8 @@
-import 'package:advacalc/advan_screen.dart';
+// import 'package:advacalc/advan_screen.dart';
+import 'package:advacalc/home_screen.dart';
 // import 'package:advacalc/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,13 +14,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const AdvancePage(),
+    return ScreenUtilInit(
+      designSize: Size(375, 812), // Example design size
+      builder: (context, child) {
+        return MaterialApp(
+          home: HomePage(),
+        );
+      },
     );
   }
 }

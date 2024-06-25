@@ -4,9 +4,11 @@ import 'package:advacalc/help_screen.dart';
 import 'package:advacalc/my_formula.dart';
 import 'package:advacalc/stored_data.dart';
 import 'package:advacalc/term.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -16,9 +18,24 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class CustomDrawerState extends State<CustomDrawer> {
+  void _launchEmail() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'contact@meruprastaar.com',
+      query:
+          'subject=Contact to AdvaCalc&body=Hi there,', // Add subject and body if needed
+    );
+    if (await canLaunchUrl(params)) {
+      await launchUrl(params);
+    } else {
+      throw 'Could not launch gmail';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.0),
@@ -34,18 +51,11 @@ class CustomDrawerState extends State<CustomDrawer> {
             height: 50,
           ),
           DrawerHeader(
+            duration: Duration(seconds: 1),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(181, 1, 58, 32),
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
-            child: Center(
-              child: Text(
-                "AdvanCalc",
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
+            child: Image.asset("assets/images/Advance.png"),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,7 +123,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 ListTile(
                   leading: const Icon(Icons.auto_stories, color: Colors.white),
                   title: const Text(
-                    'Formula',
+                    'Formulas',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
@@ -157,12 +167,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ContactPage()),
-                    );
-                  },
+                  onTap: _launchEmail,
                 ),
                 ListTile(
                   leading: const Icon(Icons.history, color: Colors.white),

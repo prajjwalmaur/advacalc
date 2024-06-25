@@ -7,9 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+
+// import 'package:auto_size_text/auto_size_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   String result = "0";
   Map<String, dynamic> data = {};
   bool mode = false;
+  double screen_width = 0;
+  bool clickResult = false;
   List<dynamic> buttons = [
     "AC",
     "(",
@@ -51,7 +55,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     intialstep();
   }
@@ -84,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 'Enter the Name of Variable : ',
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15.sp),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -126,6 +129,9 @@ class _HomePageState extends State<HomePage> {
                       if (value!.isEmpty) {
                         return 'Variable Name can not Empty';
                       }
+                      if (value.contains(" ")) {
+                        return 'Variable Name contains Space';
+                      }
                       if (data[value] != null) {
                         return "Variable Name already exist with value ${data[value]}";
                       }
@@ -136,12 +142,11 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 10,
                 ),
-                AutoSizeText(
-                  minFontSize: 12,
-                  maxFontSize: 20,
-                  overflow: TextOverflow.ellipsis,
+                Text(
+                  softWrap: true,
                   "Value : ${result}",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
                 ),
               ],
             ),
@@ -151,13 +156,9 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 30), // Add some space between buttons
+                SizedBox(height: 30),
                 Container(
                   width: MediaQuery.of(context).size.width - 80,
-                  // decoration: BoxDecoration(
-                  //   color: Colors.green,
-                  //   borderRadius: BorderRadius.circular(10),
-                  // ),
                   child: ElevatedButton(
                     onPressed: () {
                       if (storVar()) {
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: const Text('Are you sure?'),
           content: const Text(
-            'Are you sure you want to exit the app?', // Clearer exit message
+            'Are you sure you want to exit the app?',
           ),
           actions: <Widget>[
             TextButton(
@@ -199,14 +200,14 @@ class _HomePageState extends State<HomePage> {
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
               child: const Text('Nevermind'),
-              onPressed: () => Navigator.pop(context, false), // Cancel dialog
+              onPressed: () => Navigator.pop(context, false),
             ),
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
               child: const Text('Exit'),
-              onPressed: () => Navigator.pop(context, true), // Exit app
+              onPressed: () => Navigator.pop(context, true),
             ),
           ],
         );
@@ -214,140 +215,151 @@ class _HomePageState extends State<HomePage> {
     );
 
     if (confirmed ?? false) {
-      SystemNavigator.pop(); // Exit the app using SystemNavigator.pop()
+      SystemNavigator.pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double buttonHeight = MediaQuery.of(context).size.height / 12;
-    double buttonWidth = MediaQuery.of(context).size.width / 4;
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        double fontSize = orientation == Orientation.portrait ? 20.sp : 10.sp;
+        double resultFontSize =
+            orientation == Orientation.portrait ? 17.sp : 8.sp;
+        double buttonHeight = MediaQuery.of(context).size.height / 12;
+        double buttonWidth = MediaQuery.of(context).size.width / 4;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const AutoSizeText(
-              minFontSize: 10,
-              maxFontSize: 20,
-              overflow: TextOverflow.ellipsis,
-              "Switch to Advance mode : ",
-              style: TextStyle(color: Colors.white),
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            automaticallyImplyLeading: false,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  overflow: TextOverflow.ellipsis,
+                  "Switch to Advance mode : ",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize,
+                  ),
+                ),
+                Switch(
+                  value: mode,
+                  inactiveThumbColor: Colors.red,
+                  inactiveTrackColor: Colors.white,
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.green,
+                  onChanged: (bool value) {
+                    if (value) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AdvancePage()));
+                    }
+                  },
+                ),
+              ],
             ),
-            Switch(
-              value: mode,
-              inactiveThumbColor: Colors.red,
-              inactiveTrackColor: Colors.white,
-              activeColor: Colors.white,
-              activeTrackColor: Colors.green,
-              onChanged: (bool value) {
-                if (value) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AdvancePage()));
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Colors.black,
-      body: PopScope(
-        canPop: false,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            return;
-          }
-          _showBackDialog();
-        },
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+          ),
+          backgroundColor: Colors.black,
+          body: PopScope(
+            canPop: false,
+            onPopInvoked: (bool didPop) {
+              if (didPop) {
+                return;
+              }
+              _showBackDialog();
+            },
+            child: Column(
+              mainAxisAlignment: (orientation == Orientation.portrait)
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.start,
+              children: <Widget>[
+                if (orientation == Orientation.portrait)
+                  Container(
+                    color: Colors.amber,
+                    height: 10,
+                  ),
+                Container(
+                  // color: Colors.amber,
+                  padding: (orientation == Orientation.portrait)
+                      ? EdgeInsets.all(20)
+                      : EdgeInsets.all(1),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    maxLines: fontSize == 20.sp ? 5 : 1,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    userInput,
+                    style: TextStyle(color: Colors.white, fontSize: fontSize),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      alignment: Alignment.centerRight,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: AutoSizeText(
-                          minFontSize: 15,
-                          maxFontSize: 20,
-                          overflow: TextOverflow.ellipsis,
-                          userInput,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                              padding: EdgeInsets.all(20),
-                              alignment: Alignment.centerRight,
-                              child: AutoSizeText(
-                                softWrap: true,
-                                minFontSize: 15,
-                                maxFontSize: 20,
-                                overflow: TextOverflow.ellipsis,
-                                result,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
+                        Container(
+                          // color: Colors.blueAccent,
+                          padding: (orientation == Orientation.portrait)
+                              ? EdgeInsets.all(20)
+                              : EdgeInsets.all(1),
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            result,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: resultFontSize),
                           ),
                         ),
-                        IconButton(
-                            // iconSize: 40,
-                            onPressed: () {
-                              _showStartDialog();
-                            },
-                            icon: Icon(Icons.download)),
+                        if (clickResult)
+                          IconButton(
+                              color: Colors.white,
+                              onPressed: () {
+                                _showStartDialog();
+                              },
+                              icon: Icon(Icons.save)),
                       ],
+                    ),
+                    Divider(
+                      color: Colors.white,
+                    ),
+                    Container(
+                      padding: (orientation == Orientation.portrait)
+                          ? EdgeInsets.all(10)
+                          : EdgeInsets.all(1),
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: buttonWidth / buttonHeight,
+                        ),
+                        itemCount: buttons.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CustomBut(buttons[index], buttonHeight);
+                        },
+                      ),
                     ),
                   ],
                 ),
-              ),
-              Divider(
-                color: Colors.white,
-              ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: buttonWidth / buttonHeight,
-                    ),
-                    itemCount: buttons.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return CustomBut(buttons[index], buttonHeight);
-                    },
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget CustomBut(String text, double buttonHeight) {
     return InkWell(
+      hoverDuration: Duration(milliseconds: 200),
       splashColor: Colors.cyan,
       onTap: () {
         setState(() {
@@ -368,7 +380,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         child: Center(
-          child: AutoSizeText(
+          child: Text(
             text,
             style: TextStyle(
                 fontSize: buttonHeight / 2,
@@ -398,7 +410,7 @@ class _HomePageState extends State<HomePage> {
       return Colors.orangeAccent;
     }
     if (text == "=") {
-      Colors.greenAccent;
+      return Colors.greenAccent;
     }
 
     return Colors.black;
@@ -408,6 +420,9 @@ class _HomePageState extends State<HomePage> {
     if (text == "AC") {
       userInput = "";
       result = "0";
+      setState(() {
+        clickResult = false;
+      });
       return;
     }
     if (text == "DEL") {
@@ -419,6 +434,9 @@ class _HomePageState extends State<HomePage> {
     }
     if (text == "=") {
       result = calculateEx();
+      setState(() {
+        clickResult = true;
+      });
       if (result.endsWith(".0")) {
         result = result.replaceAll(".0", "");
       }

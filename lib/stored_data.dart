@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/drawer.dart';
+import 'package:advacalc/snakbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,6 +50,7 @@ class _StorePageState extends State<StorePage> {
       data.remove(key);
     });
     await _pref.setString("data", jsonEncode(data));
+    showCustomSnackBar(context, "Deleted");
   }
 
   void _showAddVariableDialog() {
@@ -98,9 +100,9 @@ class _StorePageState extends State<StorePage> {
     );
   }
 
-  void _showUpdateVariableDialog(String key) {
+  void _showUpdateVariableDialog(String key, dynamic value) {
     final TextEditingController valueController = TextEditingController();
-
+    valueController.value = value;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -114,6 +116,7 @@ class _StorePageState extends State<StorePage> {
                 decoration: const InputDecoration(labelText: 'New Value'),
                 keyboardType: TextInputType.number,
               ),
+              // Text("Old value : $value")
             ],
           ),
           actions: [
@@ -261,7 +264,7 @@ class _StorePageState extends State<StorePage> {
                                 IconButton(
                                   icon: Icon(Icons.edit),
                                   onPressed: () {
-                                    _showUpdateVariableDialog(key);
+                                    _showUpdateVariableDialog(key, value);
                                   },
                                 ),
                                 IconButton(

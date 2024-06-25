@@ -18,19 +18,6 @@ class _FormulaPageState extends State<FormulaPage> {
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
   int no = 0;
-  List<dynamic> formulas = [
-    {
-      "title": "Parameter of Rectangle",
-      "instruction": "All variables must have same unit",
-      "exp": "2*(Length + Width)"
-    },
-    {
-      "title": "Area of Rectangle",
-      "instruction": "All variables must have same unit",
-      "exp": "Length * Width"
-    },
-    // Add more formulas here
-  ];
 
   Future<void> loadMoreFormulas() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -123,4 +110,104 @@ class _FormulaPageState extends State<FormulaPage> {
       endDrawer: CustomDrawer(),
     );
   }
+
+  List<dynamic> formulas = [
+    {
+      "title": "Parameter of Rectangle",
+      "instruction": "All variables must have same unit",
+      "exp": "2*(Length + Width)"
+    },
+    {
+      "title": "Area of Rectangle",
+      "instruction": "All variables must have same unit",
+      "exp": "Length * Width"
+    },
+    {
+      "title": "Perimeter of a Square",
+      "instruction": "All variables must have same unit",
+      "exp": " 4*  side"
+    },
+    {
+      "title": "Area of a Square",
+      "instruction": "All variables must have same unit",
+      "exp": "side ^ 2"
+    },
+    {
+      "title": "Area of a Rright angle Triangle",
+      "instruction": "All variables must have same unit",
+      "exp": "0.5 * base * height"
+    },
+    {
+      "title": "Area of a Trapezoid",
+      "instruction": "All variables must have same unit",
+      "exp": "0.5 * ( base1 + base2 ) * heigth"
+    },
+    {
+      "title": "Area of a Circle",
+      "instruction": "All variables must have same unit",
+      "exp": "PI * radius ^ 2"
+    },
+    {
+      "title": "Circumference of a Circle",
+      "instruction": "All variables must have same unit",
+      "exp": "2 * PI * radius"
+    },
+    {
+      "title": "Surface Area of a Cube",
+      "instruction": "All variables must have same unit",
+      "exp": "6 * side ^2"
+    },
+    {
+      "title": "Curved surface area of a Cylinder",
+      "instruction": "All variables must have same unit",
+      "exp": "2 * PI * radius * height"
+    },
+    {
+      "title": "Total surface area of a Cylinder",
+      "instruction": "All variables must have same unit",
+      "exp": "2 * PI * radius * ( radius + height )"
+    },
+    {
+      "title": "Volume of a Cylinder",
+      "instruction": "All variables must have same unit",
+      "exp": "PI * radius ^ 2 * height"
+    },
+    {
+      "title": "Curved surface area of a cone",
+      "instruction": "All variables must have same unit",
+      "exp": "PI * radius * lheight"
+    },
+    {
+      "title": "Total surface area of a cone 1 ",
+      "instruction": "All variables must have same unit",
+      "exp": "PI * radius * ( radius + lheight)"
+    },
+    {
+      "title": "Total surface area of a cone 2 ",
+      "instruction": "All variables must have same unit",
+      "exp": "PI * radius * (radius + sqrt ( h2 + r2 ) )"
+    },
+    {
+      "title": "Volume of a Cone",
+      "instruction": "All variables must have same unit",
+      "exp": " 1/3 * PI * radius ^ 2 * height"
+    },
+    {
+      "title": "Surface Area of a Sphere",
+      "instruction": "All variables must have same unit",
+      "exp": "4 * PI * radius ^2"
+    },
+    {
+      "title": "Volume of a Sphere",
+      "instruction": "All variables must have same unit",
+      "exp": "4/3  * PI * radius ^ 3"
+    },
+    {
+      "title": "Area of Ellipse",
+      "instruction": "All variables must have same unit",
+      "exp": "PI * a * b"
+    },
+
+    // Add more formulas here
+  ];
 }

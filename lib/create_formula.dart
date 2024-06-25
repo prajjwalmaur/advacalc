@@ -64,6 +64,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
           'sgn',
           'ln',
           'e',
+          "PI"
         };
         RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
         Iterable<Match> matches = regExp.allMatches(expression);
