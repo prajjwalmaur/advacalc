@@ -25,7 +25,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
   final TextEditingController _instructionController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> variables = [];
-  String expression = "";
+  String expres = "";
   bool tryIt = false;
 
   @override
@@ -40,12 +40,12 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
 
   void extractVariables() {
     if (_formKey.currentState!.validate()) {
-      expression = _expController.text;
+      expres = _expController.text;
 
       // Check if the expression is valid
       try {
         Parser parser = Parser();
-        Expression exp = parser.parse(expression);
+
         final Set<String> knownFunctions = {
           'π',
           'nrt',
@@ -63,11 +63,9 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
           'floor',
           'sgn',
           'ln',
-          'e',
-          "PI"
         };
         RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
-        Iterable<Match> matches = regExp.allMatches(expression);
+        Iterable<Match> matches = regExp.allMatches(expres);
 
         // Extract words from matches and filter out known functions
         Set<String> words = matches
@@ -78,6 +76,30 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
         setState(() {
           variables = words.toList();
         });
+
+        expres = expres.replaceAll('e', '_');
+        if (variables.contains('e')) {
+          expres = expres.replaceAll(
+              RegExp(r'(?<=[\s\+\-\*\/(]|^)_(?=[\s\+\-\*\/)]|$)'), 'e(1)');
+          setState(() {
+            variables.remove('e');
+          });
+          // print("hjghvhg");
+        }
+        if (variables.contains('PI')) {
+          setState(() {
+            variables.remove("PI");
+          });
+        }
+
+        expres = expres.replaceAllMapped(RegExp(r'log\((\d+)\)'), (match) {
+          return 'log(10,${match.group(1)})';
+        });
+        expres = expres.replaceAllMapped(RegExp(r'nrt\((\d+)\)'), (match) {
+          return 'nrt(2,${match.group(1)})';
+        });
+
+        Expression exp = parser.parse(expres);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Invalid expression: ${e.toString()}")),
@@ -91,7 +113,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
       Map<String, dynamic> formulaData = {
         "title": _titleController.text,
         "instruction": _instructionController.text,
-        "exp": expression,
+        "exp": expres,
       };
 
       // Retrieve and update the formula list safely
@@ -105,7 +127,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
         SnackBar(content: Text("Formula saved successfully!")),
       );
       setState(() {
-        expression = "";
+        expres = "";
         variables = [];
         _expController.clear();
         _titleController.clear();

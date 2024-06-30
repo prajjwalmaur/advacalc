@@ -135,6 +135,10 @@ class _HomePageState extends State<HomePage> {
                       if (data[value] != null) {
                         return "Variable Name already exist with value ${data[value]}";
                       }
+                      RegExp regExp = RegExp(r'[a-zA-Z][a-zA-Z0-9]*');
+                      if (!regExp.hasMatch(value)) {
+                        return "Variable name is invalid";
+                      }
                       return null;
                     },
                   ),
@@ -279,7 +283,7 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 if (orientation == Orientation.portrait)
                   Container(
-                    color: Colors.amber,
+                    // color: Colors.amber,
                     height: 10,
                   ),
                 Container(
@@ -331,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       padding: (orientation == Orientation.portrait)
-                          ? EdgeInsets.all(10)
+                          ? EdgeInsets.all(5)
                           : EdgeInsets.all(1),
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: GridView.builder(

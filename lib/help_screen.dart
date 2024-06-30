@@ -19,17 +19,26 @@ class _HelpPageState extends State<HelpPage> {
     "x^a": ["For finding x to power a", "7^2\n= 49"],
     'x!': ["For finding factorial of x", "5!\n = 120"],
     "π": ["π use for PI value 3.1415926..", "π * 7^2\n= 153.938"],
+    "e": ["e use for Euler's Number 'e'..", "e\n= 2.718281828459045…"],
   };
 
   final Map<String, List<String>> data = {
+    'log(x)': [
+      "Logarithm of x to 10 base",
+      "log of 1000 to base 10\nlog(1000)\n= 3"
+    ],
     'ln(x)': [
       "Natural logarithm (logarithm to the base e)",
       "ln(2)\n= 0.693147"
     ],
-    'e(x)': ["Euler's Number 'e' to power x", "e(1)\n = 2.718281828459045…"],
+    // 'e(x)': ["Euler's Number 'e' to power x", "e(1)\n = 2.718281828459045…"],
     'nrt(n,x)': [
       "For finding nth root of x",
       "Cube root of 64\nnrt(3, 64)\n= 4"
+    ],
+    'nrt(x)': [
+      "For finding square root of x",
+      "Square root of 16\nnrt(16)\n= 4"
     ],
     'sqrt(x)': ["For finding square root of x", "sqrt(64)\n=8"],
     'log(b,x)': [
@@ -82,7 +91,7 @@ class _HelpPageState extends State<HelpPage> {
                   width: 1,
                 ),
                 children: [
-                  const TableRow(
+                  TableRow(
                     decoration: BoxDecoration(color: Colors.blue),
                     children: [
                       Center(
@@ -91,7 +100,9 @@ class _HelpPageState extends State<HelpPage> {
                           child: Text(
                             'Symbol',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -101,7 +112,9 @@ class _HelpPageState extends State<HelpPage> {
                           child: Text(
                             'Description',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -111,7 +124,9 @@ class _HelpPageState extends State<HelpPage> {
                           child: Text(
                             'Example',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -186,7 +201,9 @@ class _HelpPageState extends State<HelpPage> {
                           child: Text(
                             'Function',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -196,7 +213,9 @@ class _HelpPageState extends State<HelpPage> {
                           child: Text(
                             'Description',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -206,7 +225,9 @@ class _HelpPageState extends State<HelpPage> {
                           child: Text(
                             'Example',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white),
                           ),
                         ),
                       ),

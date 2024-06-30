@@ -1,18 +1,65 @@
 import 'dart:math' as math;
 import 'package:math_expressions/math_expressions.dart';
 
+void main() {
+  Parser parser = Parser();
+  try {
+    Map<String, dynamic> data = {"elep": "4"};
+    // Parse the expression
+    // print("fs");
+
+    // Define the variables in a context model
+    ContextModel cm = ContextModel();
+    cm.bindVariable(Variable('π'), Number(math.pi));
+    List<String> variables = ['elep', 'e'];
+    String expres = " elep - 1 + e ";
+
+    expres = expres.replaceAll('e', '_');
+    if (variables.contains('e')) {
+      expres = expres.replaceAll(
+          RegExp(r'(?<=[\s\+\-\*\/(]|^)_(?=[\s\+\-\*\/)]|$)'), 'e(1)');
+      variables.remove('e');
+    }
+    if (variables.contains('PI')) {
+      cm.bindVariable(Variable('PI'), Number(math.pi));
+
+      variables.remove("PI");
+    }
+
+    expres = expres.replaceAllMapped(RegExp(r'log\((\d+)\)'), (match) {
+      return 'log(10,${match.group(1)})';
+    });
+
+    for (String element in variables) {
+      if (element != 'e' && element != "PI") {
+        cm.bindVariable(Variable(element.replaceAll('e', '_')),
+            Number(double.parse(data[element])));
+      }
+    }
+    Expression expression = parser.parse(expres);
+    print(expression);
+    String result = expression.evaluate(EvaluationType.REAL, cm).toString();
+    print(result);
+  } catch (e) {
+    print(e.toString());
+  }
+  // Evaluate the expression with the context model
+}
+
+// Output: "3 * e(1) + 2 - e(1) * (5 / e(1))"
+
 /// This file contains the following examples:
 ///  - Example 1: Expression creation and evaluation
 ///               (through the Parser and programmatically)
 ///  - Example 2: Expression simplification and differentiation
 ///  - Example 3: Custom function definition and use (function bound to expression)
 ///  - Example 4: Generic function definition and use (function bound to Dart handler)
-void main() {
-  _expression_creation_and_evaluation();
-  // _expression_simplification_and_differentiation();
-  // _custom_function_definition_and_use();
-  // _algorithmic_function_definition_and_use();
-}
+// void main() {
+//   _expression_creation_and_evaluation();
+//   // _expression_simplification_and_differentiation();
+//   // _custom_function_definition_and_use();
+//   // _algorithmic_function_definition_and_use();
+// }
 
 /// Example 1: Expression creation and evaluation
 ///

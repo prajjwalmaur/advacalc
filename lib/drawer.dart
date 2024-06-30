@@ -1,5 +1,6 @@
-import 'package:advacalc/contact_screen.dart';
+// import 'package:advacalc/contact_screen.dart';
 import 'package:advacalc/create_formula.dart';
+import 'package:advacalc/formula_screen.dart';
 import 'package:advacalc/help_screen.dart';
 import 'package:advacalc/my_formula.dart';
 import 'package:advacalc/stored_data.dart';
@@ -131,7 +132,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MyFormulaPage()),
+                          builder: (context) => const FormulaPage()),
                     );
                   },
                 ),

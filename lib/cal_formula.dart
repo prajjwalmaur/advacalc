@@ -28,6 +28,8 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
   String result = "";
   bool isCal = false;
   List<String> variables = [];
+  List<String> lst = [];
+  bool isDegree = false;
 
   @override
   void initState() {
@@ -53,8 +55,6 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
       'floor',
       'sgn',
       'ln',
-      'e',
-      "PI",
     };
     RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
     Iterable<Match> matches = regExp.allMatches(widget.exp);
@@ -68,9 +68,15 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
     setState(() {
       variables = words.toList();
     });
-    _controllers = {
-      for (var variable in variables) variable: TextEditingController()
-    };
+
+    _controllers = {};
+
+    for (var element in variables) {
+      if (element != "e" && element != "PI") {
+        lst.add(element);
+        _controllers[element] = TextEditingController();
+      }
+    }
   }
 
   @override
@@ -79,28 +85,197 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
     super.dispose();
   }
 
+  void _showTrignometry() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'For Trigonometric function: ',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              Container(
+                // width: 20,
+                // height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.red, width: 2),
+                ),
+                child: IconButton(
+                  iconSize: 15,
+                  icon: const Icon(Icons.close, color: Colors.red),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            height: 120,
+            width: MediaQuery.of(context).size.width - 40,
+            child: Column(
+              children: [
+                Text(
+                  "In which unit You have entered all value ??",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                  softWrap: true,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20), // Add some space between buttons
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 80,
+                  // decoration: BoxDecoration(
+                  //   color: Colors.green,
+                  //   borderRadius: BorderRadius.circular(10),
+                  // ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.deepPurple),
+                    ),
+                    child: const Text(
+                      'Radian',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10), // Add some space between buttons
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 80,
+                  // decoration: BoxDecoration(
+                  //   color: Colors.green,
+                  //   borderRadius: BorderRadius.circular(10),
+                  // ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green),
+                    ),
+                    child: const Text(
+                      'Degree',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed ?? false) {
+      setState(() {
+        isDegree = true;
+      });
+    }
+  }
+
   void calculatexp() {
     if (_formKey.currentState!.validate()) {
       Parser parser = Parser();
-      Expression expression;
 
       try {
         // Parse the expression
-        expression = parser.parse(widget.exp);
-
-        // Define the variables in a context model
         ContextModel cm = ContextModel();
         cm.bindVariable(Variable('π'), Number(math.pi));
-        cm.bindVariable(Variable('PI'), Number(math.pi));
-        // cm.bindVariable(Variable('e'), Number(math.e));
+        String expres = widget.exp;
+
+        if (expres.contains(RegExp(r'\b(sin|cos|tan|arccos|arcsin|arctan)\b',
+            caseSensitive: false))) {
+          _showTrignometry();
+        }
+
+        if (expres
+            .contains(RegExp(r'\b(cot|sec|csc)\b', caseSensitive: false))) {
+          _showTrignometry();
+
+          expres = expres.replaceAllMapped(RegExp(r'cot\((\d+)\)'), (match) {
+            return '(1 / tan(${match.group(1)} ))';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'sec\((\d+)\)'), (match) {
+            return '( 1 / cos(${match.group(1)}))';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'csc\((\d+)\)'), (match) {
+            return '( 1 / sin(${match.group(1)} )';
+          });
+        }
+
+        if (isDegree) {
+          expres = expres.replaceAllMapped(RegExp(r'sin\((\d+)\)'), (match) {
+            return 'sin(${match.group(1)} * π / 180 )';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'cos\((\d+)\)'), (match) {
+            return 'cos(${match.group(1)} * π / 180 )';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'tan\((\d+)\)'), (match) {
+            return 'tan(${match.group(1)} * π / 180 )';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'arccos\((\d+)\)'), (match) {
+            return 'arccos(${match.group(1)} * π / 180 )';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'arcsin\((\d+)\)'), (match) {
+            return 'arcsin(${match.group(1)} * π / 180 )';
+          });
+          expres = expres.replaceAllMapped(RegExp(r'arctan\((\d+)\)'), (match) {
+            return 'arctan(${match.group(1)} * π / 180 )';
+          });
+        }
+
+        expres = expres.replaceAll('e', '_');
+        if (variables.contains('e')) {
+          expres = expres.replaceAll(
+              RegExp(r'(?<=[\s\+\-\*\/(]|^)_(?=[\s\+\-\*\/)]|$)'), 'e(1)');
+          setState(() {
+            variables.remove('e');
+          });
+          // print("hjghvhg");
+        }
+        if (variables.contains('PI')) {
+          cm.bindVariable(Variable('PI'), Number(math.pi));
+          setState(() {
+            variables.remove("PI");
+          });
+        }
+
+        expres = expres.replaceAllMapped(RegExp(r'log\((\d+)\)'), (match) {
+          return 'log(10,${match.group(1)})';
+        });
+        expres = expres.replaceAllMapped(RegExp(r'nrt\((\d+)\)'), (match) {
+          return 'nrt(2,${match.group(1)})';
+        });
+
         variables.forEach((variable) {
           // Ensure the value is not null or empty before parsing
-          String? value = _controllers[variable]?.text;
-          if (value != null && value.isNotEmpty) {
-            cm.bindVariable(Variable(variable), Number(double.parse(value)));
+          if (variable != 'e' && variable != "PI") {
+            String? value = _controllers[variable]?.text;
+            if (value != null && value.isNotEmpty) {
+              cm.bindVariable(Variable(variable), Number(double.parse(value)));
+            }
           }
         });
 
+        Expression expression = parser.parse(expres);
         // Evaluate the expression with the context model
         setState(() {
           result = expression.evaluate(EvaluationType.REAL, cm).toString();
@@ -157,7 +332,7 @@ class _CalFormulaPageState extends State<CalFormulaPage> {
                   Form(
                     key: _formKey,
                     child: Column(
-                      children: variables.map((variable) {
+                      children: lst.map((variable) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: TextFormField(

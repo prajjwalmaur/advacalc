@@ -4,6 +4,7 @@ import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/drawer.dart';
 import 'package:advacalc/snakbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorePage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _StorePageState extends State<StorePage> {
   late SharedPreferences _pref;
   Map<String, dynamic> data = {};
   String searchQuery = "";
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -62,19 +64,74 @@ class _StorePageState extends State<StorePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Add Variable'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: keyController,
-                decoration: const InputDecoration(labelText: 'Variable Name'),
-              ),
-              TextField(
-                controller: valueController,
-                decoration: const InputDecoration(labelText: 'Value'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+          content: Form(
+            key: _formKey2,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: keyController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    labelText: 'Variable Name',
+                    prefixIcon:
+                        const Icon(Icons.person, color: Colors.blueGrey),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Variable Name can not Empty';
+                    }
+                    if (value.contains(" ")) {
+                      return 'Variable Name contains Space';
+                    }
+                    if (data[value] != null) {
+                      return "Variable Name already exist with value ${data[value]}";
+                    }
+                    RegExp regExp = RegExp(r'[a-zA-Z][a-zA-Z0-9]*');
+                    if (!regExp.hasMatch(value)) {
+                      return "Variable name is invalid";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: valueController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Variable Value',
+                    prefixIcon:
+                        const Icon(Icons.person, color: Colors.blueGrey),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Variable Value can not Empty';
+                    }
+                    if (value.contains(" ")) {
+                      return 'Variable Value contains Space';
+                    }
+                    try {
+                      double temp = double.parse(value);
+                    } catch (e) {
+                      return 'Variable Value is invalid';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -85,11 +142,13 @@ class _StorePageState extends State<StorePage> {
             ),
             TextButton(
               onPressed: () {
-                final String key = keyController.text;
-                final String value = valueController.text;
-                if (key.isNotEmpty && value.isNotEmpty) {
-                  addVariable(key, value);
-                  Navigator.of(context).pop();
+                if (_formKey2.currentState!.validate()) {
+                  final String key = keyController.text;
+                  final String value = valueController.text;
+                  if (key.isNotEmpty && value.isNotEmpty) {
+                    addVariable(key, value);
+                    Navigator.of(context).pop();
+                  }
                 }
               },
               child: const Text('Add'),
@@ -100,9 +159,44 @@ class _StorePageState extends State<StorePage> {
     );
   }
 
+  void _showDeleteCom(String key) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: Text(
+            'Are you sure to delete $key',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Delete'),
+              onPressed: () => Navigator.pop(context, true),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed ?? false) {
+      deleteVariable(key);
+    }
+  }
+
   void _showUpdateVariableDialog(String key, dynamic value) {
-    final TextEditingController valueController = TextEditingController();
-    valueController.value = value;
+    final TextEditingController valueController =
+        TextEditingController(text: value);
+    // valueController.value = value.toString();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -113,7 +207,9 @@ class _StorePageState extends State<StorePage> {
             children: [
               TextField(
                 controller: valueController,
-                decoration: const InputDecoration(labelText: 'New Value'),
+                decoration: const InputDecoration(
+                  labelText: 'New Value',
+                ),
                 keyboardType: TextInputType.number,
               ),
               // Text("Old value : $value")
@@ -270,7 +366,7 @@ class _StorePageState extends State<StorePage> {
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
-                                    deleteVariable(key);
+                                    _showDeleteCom(key);
                                   },
                                 ),
                               ],
