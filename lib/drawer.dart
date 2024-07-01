@@ -117,7 +117,11 @@ class CustomDrawerState extends State<CustomDrawer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreateFormulaPage()),
+                          builder: (context) => const CreateFormulaPage(
+                                express: "",
+                                tit: "",
+                                instruc: "",
+                              )),
                     );
                   },
                 ),

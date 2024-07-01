@@ -62,7 +62,7 @@ class _AdvancePageState extends State<AdvancePage> {
     });
   }
 
-  void calculatexp() {
+  void calculatexp() async {
     if (_formKey.currentState!.validate()) {
       Parser parser = Parser();
       try {
@@ -73,41 +73,50 @@ class _AdvancePageState extends State<AdvancePage> {
 
         if (expres.contains(RegExp(r'\b(sin|cos|tan|arccos|arcsin|arctan)\b',
             caseSensitive: false))) {
-          _showTrignometry();
+          await _showTrignometry();
         }
 
         if (expres
             .contains(RegExp(r'\b(cot|sec|csc)\b', caseSensitive: false))) {
-          _showTrignometry();
+          await _showTrignometry();
 
-          expres = expres.replaceAllMapped(RegExp(r'cot\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'cot\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return '(1 / tan(${match.group(1)} ))';
           });
-          expres = expres.replaceAllMapped(RegExp(r'sec\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'sec\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return '( 1 / cos(${match.group(1)}))';
           });
-          expres = expres.replaceAllMapped(RegExp(r'csc\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'csc\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return '( 1 / sin(${match.group(1)} )';
           });
         }
 
         if (isDegree) {
-          expres = expres.replaceAllMapped(RegExp(r'sin\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'sin\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return 'sin(${match.group(1)} * π / 180 )';
           });
-          expres = expres.replaceAllMapped(RegExp(r'cos\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'cos\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return 'cos(${match.group(1)} * π / 180 )';
           });
-          expres = expres.replaceAllMapped(RegExp(r'tan\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'tan\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return 'tan(${match.group(1)} * π / 180 )';
           });
-          expres = expres.replaceAllMapped(RegExp(r'arccos\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'arccos\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return 'arccos(${match.group(1)} * π / 180 )';
           });
-          expres = expres.replaceAllMapped(RegExp(r'arcsin\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'arcsin\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return 'arcsin(${match.group(1)} * π / 180 )';
           });
-          expres = expres.replaceAllMapped(RegExp(r'arctan\((\d+)\)'), (match) {
+          expres = expres.replaceAllMapped(
+              RegExp(r'arctan\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
             return 'arctan(${match.group(1)} * π / 180 )';
           });
         }
@@ -128,10 +137,12 @@ class _AdvancePageState extends State<AdvancePage> {
           });
         }
 
-        expres = expres.replaceAllMapped(RegExp(r'log\((\d+)\)'), (match) {
+        expres = expres.replaceAllMapped(
+            RegExp(r'log\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
           return 'log(10,${match.group(1)})';
         });
-        expres = expres.replaceAllMapped(RegExp(r'nrt\((\d+)\)'), (match) {
+        expres = expres.replaceAllMapped(
+            RegExp(r'nrt\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
           return 'nrt(2,${match.group(1)})';
         });
 
@@ -153,7 +164,7 @@ class _AdvancePageState extends State<AdvancePage> {
     }
   }
 
-  void _showTrignometry() async {
+  Future<bool> _showTrignometry() async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -212,6 +223,7 @@ class _AdvancePageState extends State<AdvancePage> {
                   // ),
                   child: ElevatedButton(
                     onPressed: () {
+                      FocusScope.of(context).unfocus();
                       Navigator.pop(context, false);
                     },
                     style: ButtonStyle(
@@ -233,6 +245,7 @@ class _AdvancePageState extends State<AdvancePage> {
                   // ),
                   child: ElevatedButton(
                     onPressed: () {
+                      FocusScope.of(context).unfocus();
                       Navigator.pop(context, true);
                     },
                     style: ButtonStyle(
@@ -256,7 +269,12 @@ class _AdvancePageState extends State<AdvancePage> {
       setState(() {
         isDegree = true;
       });
+    } else {
+      setState(() {
+        isDegree = false;
+      });
     }
+    return false;
   }
 
   void _showStartDialog() async {
@@ -711,7 +729,8 @@ class _AdvancePageState extends State<AdvancePage> {
                                       "Variable",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 15),
+                                          fontSize: 15,
+                                          color: Colors.white),
                                     ),
                                   ),
                                 ),
@@ -745,7 +764,8 @@ class _AdvancePageState extends State<AdvancePage> {
                                         "Value",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15)),
+                                            fontSize: 15,
+                                            color: Colors.white)),
                                   ),
                                 ),
                               ),

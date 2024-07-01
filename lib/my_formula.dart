@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/cal_formula.dart';
+import 'package:advacalc/create_formula.dart';
 import 'package:advacalc/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,9 +29,61 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
   Future<void> initialStep() async {
     _pref = await SharedPreferences.getInstance();
     String formulaString = _pref.getString("myFormula") ?? "[]";
+    formulas = jsonDecode(formulaString);
+    Iterable inReverse = formulas.reversed;
+
     setState(() {
-      formulas = jsonDecode(formulaString);
+      formulas = inReverse.toList();
     });
+  }
+
+  Future<void> deleteFormula(int index) async {
+    setState(() {
+      formulas.removeAt(index);
+    });
+    await _pref.setString("myFormula", jsonEncode(formulas));
+  }
+
+  Future<void> showDeleteConfirmationDialog(
+      int index, String exp, String inst, String tit) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Formula'),
+          content: Text('Are you sure you want to delete this formula?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                deleteFormula(index);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Edit'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateFormulaPage(
+                            express: exp,
+                            instruc: inst,
+                            tit: tit,
+                          )),
+                );
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -39,8 +92,8 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          softWrap: true,
           "My Formula Book 📖",
+          softWrap: true,
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
         ),
       ),
@@ -74,10 +127,14 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
                 var formula = formulas[index];
                 String title = formula["title"];
                 if (title.toLowerCase().contains(searchQuery.toLowerCase())) {
-                  return CalFormulaPage(
-                    exp: formula["exp"],
-                    title: title,
-                    instuction: formula["instruction"],
+                  return GestureDetector(
+                    onLongPress: () => showDeleteConfirmationDialog(
+                        index, formula["exp"], formula["instruction"], title),
+                    child: CalFormulaPage(
+                      exp: formula["exp"],
+                      title: title,
+                      instuction: formula["instruction"],
+                    ),
                   );
                 } else {
                   return Container(); // Return an empty container if it doesn't match
@@ -86,6 +143,20 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const CreateFormulaPage(
+                      express: "",
+                      tit: "",
+                      instruc: "",
+                    )),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigation(),
       endDrawer: CustomDrawer(),

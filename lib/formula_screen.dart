@@ -35,8 +35,11 @@ class _FormulaPageState extends State<FormulaPage> {
       List<dynamic> newFormulas = await jsonDecode(response.body);
       // print(newFormulas.toString());
       // print(newFormulas[0].toString());
+      formulas.addAll(newFormulas);
+      Iterable inReverse = formulas.reversed;
+
       setState(() {
-        formulas.addAll(newFormulas);
+        formulas = inReverse.toList();
       });
       // print(formulas);
     } else if (response.statusCode == 204) {

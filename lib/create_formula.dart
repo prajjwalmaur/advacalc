@@ -12,7 +12,15 @@ import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateFormulaPage extends StatefulWidget {
-  const CreateFormulaPage({super.key});
+  final String express;
+  final String instruc;
+  final String tit;
+
+  const CreateFormulaPage(
+      {super.key,
+      required this.express,
+      required this.instruc,
+      required this.tit});
 
   @override
   State<CreateFormulaPage> createState() => _CreateFormulaPageState();
@@ -35,6 +43,9 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
   }
 
   Future<void> intialstep() async {
+    _expController.text = widget.express;
+    _titleController.text = widget.tit;
+    _instructionController.text = widget.instruc;
     _pref = await SharedPreferences.getInstance();
   }
 
@@ -64,7 +75,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
           'sgn',
           'ln',
         };
-        RegExp regExp = RegExp(r'[a-zA-Z_][a-zA-Z0-9_]*');
+        RegExp regExp = RegExp(r'[a-zA-Z][a-zA-Z0-9]*');
         Iterable<Match> matches = regExp.allMatches(expres);
 
         // Extract words from matches and filter out known functions
@@ -75,6 +86,16 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
 
         setState(() {
           variables = words.toList();
+        });
+
+        expres = expres.replaceAllMapped(
+            RegExp(r'log\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+          return 'log(10,${match.group(1)})';
+        });
+
+        expres = expres.replaceAllMapped(
+            RegExp(r'nrt\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+          return 'nrt(2,${match.group(1)})';
         });
 
         expres = expres.replaceAll('e', '_');
@@ -91,13 +112,6 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
             variables.remove("PI");
           });
         }
-
-        expres = expres.replaceAllMapped(RegExp(r'log\((\d+)\)'), (match) {
-          return 'log(10,${match.group(1)})';
-        });
-        expres = expres.replaceAllMapped(RegExp(r'nrt\((\d+)\)'), (match) {
-          return 'nrt(2,${match.group(1)})';
-        });
 
         Expression exp = parser.parse(expres);
       } catch (e) {
