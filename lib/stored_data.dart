@@ -4,7 +4,6 @@ import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/drawer.dart';
 import 'package:advacalc/snakbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorePage extends StatefulWidget {
@@ -52,6 +51,7 @@ class _StorePageState extends State<StorePage> {
       data.remove(key);
     });
     await _pref.setString("data", jsonEncode(data));
+    // ignore: use_build_context_synchronously
     showCustomSnackBar(context, "Deleted");
   }
 
@@ -99,7 +99,7 @@ class _StorePageState extends State<StorePage> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -250,10 +250,10 @@ class _StorePageState extends State<StorePage> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -269,22 +269,22 @@ class _StorePageState extends State<StorePage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search),
                 ),
               ),
             ),
             Table(
               border: TableBorder.all(
-                color: Color.fromARGB(255, 198, 198, 198),
+                color: const Color.fromARGB(255, 198, 198, 198),
                 width: 2,
               ),
-              children: [
+              children: const [
                 TableRow(
                   decoration: BoxDecoration(color: Colors.blue),
                   children: [
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           'Variable',
                           style: TextStyle(
@@ -297,7 +297,7 @@ class _StorePageState extends State<StorePage> {
                     ),
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           'Value',
                           style: TextStyle(
@@ -309,7 +309,7 @@ class _StorePageState extends State<StorePage> {
                     ),
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           'Actions',
                           style: TextStyle(
@@ -334,7 +334,7 @@ class _StorePageState extends State<StorePage> {
                   dynamic value = entry.value;
                   return Table(
                     border: TableBorder.all(
-                      color: Color.fromARGB(255, 198, 198, 198),
+                      color: const Color.fromARGB(255, 198, 198, 198),
                       width: 2,
                     ),
                     children: [
@@ -345,7 +345,7 @@ class _StorePageState extends State<StorePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 key,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -355,7 +355,7 @@ class _StorePageState extends State<StorePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 value.toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -365,13 +365,13 @@ class _StorePageState extends State<StorePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.edit),
+                                  icon: const Icon(Icons.edit),
                                   onPressed: () {
                                     _showUpdateVariableDialog(key, value);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete),
                                   onPressed: () {
                                     _showDeleteCom(key);
                                   },
@@ -393,8 +393,8 @@ class _StorePageState extends State<StorePage> {
         onPressed: _showAddVariableDialog,
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomNavigation(),
-      endDrawer: CustomDrawer(),
+      bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const CustomDrawer(),
     );
   }
 }

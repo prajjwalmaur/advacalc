@@ -81,42 +81,42 @@ class _AdvancePageState extends State<AdvancePage> {
           await _showTrignometry();
 
           expres = expres.replaceAllMapped(
-              RegExp(r'cot\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'cot\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return '(1 / tan(${match.group(1)} ))';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'sec\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'sec\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return '( 1 / cos(${match.group(1)}))';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'csc\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'csc\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return '( 1 / sin(${match.group(1)} )';
           });
         }
 
         if (isDegree) {
           expres = expres.replaceAllMapped(
-              RegExp(r'sin\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'sin\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return 'sin(${match.group(1)} * π / 180 )';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'cos\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'cos\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return 'cos(${match.group(1)} * π / 180 )';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'tan\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'tan\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return 'tan(${match.group(1)} * π / 180 )';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'arccos\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'arccos\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return 'arccos(${match.group(1)} * π / 180 )';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'arcsin\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'arcsin\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return 'arcsin(${match.group(1)} * π / 180 )';
           });
           expres = expres.replaceAllMapped(
-              RegExp(r'arctan\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+              RegExp(r'arctan\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
             return 'arctan(${match.group(1)} * π / 180 )';
           });
         }
@@ -124,7 +124,8 @@ class _AdvancePageState extends State<AdvancePage> {
         expres = expres.replaceAll('e', '_');
         if (variables.contains('e')) {
           expres = expres.replaceAll(
-              RegExp(r'(?<=[\s\+\-\*\/(]|^)_(?=[\s\+\-\*\/)]|$)'), 'e(1)');
+              RegExp(r'(?<=[\s\+\-\*\/(\^\{]|^)_(?=[\s\+\-\*\/)\^\}]|$)'),
+              'e(1)');
           setState(() {
             variables.remove('e');
           });
@@ -138,11 +139,11 @@ class _AdvancePageState extends State<AdvancePage> {
         }
 
         expres = expres.replaceAllMapped(
-            RegExp(r'log\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+            RegExp(r'log\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
           return 'log(10,${match.group(1)})';
         });
         expres = expres.replaceAllMapped(
-            RegExp(r'nrt\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+            RegExp(r'nrt\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
           return 'nrt(2,${match.group(1)})';
         });
 
@@ -153,11 +154,12 @@ class _AdvancePageState extends State<AdvancePage> {
           }
         }
         Expression expression = parser.parse(expres);
-        print(expression);
+        // print(expression);
         setState(() {
           result = expression.evaluate(EvaluationType.REAL, cm).toString();
         });
       } catch (e) {
+        // ignore: use_build_context_synchronously
         showCustomSnackBar(context, e.toString());
       }
       // Evaluate the expression with the context model
@@ -198,12 +200,11 @@ class _AdvancePageState extends State<AdvancePage> {
           content: SizedBox(
             height: 120,
             width: MediaQuery.of(context).size.width - 40,
-            child: Column(
+            child: const Column(
               children: [
                 Text(
                   "In which unit You have entered all value ??",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   softWrap: true,
                 ),
               ],
@@ -228,7 +229,7 @@ class _AdvancePageState extends State<AdvancePage> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.deepPurple),
+                          WidgetStateProperty.all(Colors.deepPurple),
                     ),
                     child: const Text(
                       'Radian',
@@ -374,7 +375,7 @@ class _AdvancePageState extends State<AdvancePage> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.deepPurple),
+                          WidgetStateProperty.all(Colors.deepPurple),
                     ),
                     child: const Text(
                       'Save',
@@ -646,7 +647,7 @@ class _AdvancePageState extends State<AdvancePage> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.deepPurple),
+                          WidgetStateProperty.all(Colors.deepPurple),
                     ),
                     child: const Text(
                       softWrap: true,
@@ -693,7 +694,7 @@ class _AdvancePageState extends State<AdvancePage> {
                     margin: const EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width - 20,
                           child: Row(
                             children: [
@@ -774,7 +775,7 @@ class _AdvancePageState extends State<AdvancePage> {
                         ),
                         ...variables.map((key) {
                           dynamic value = data[key];
-                          return Container(
+                          return SizedBox(
                             width: MediaQuery.of(context).size.width - 20,
                             child: Row(
                               children: [

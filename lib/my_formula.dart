@@ -50,18 +50,18 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Formula'),
-          content: Text('Are you sure you want to delete this formula?'),
+          title: const Text('Delete Formula'),
+          content: const Text('Are you sure you want to delete this formula?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () {
                 deleteFormula(index);
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Edit'),
+              child: const Text('Edit'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -75,7 +75,7 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
               },
             ),
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -99,7 +99,7 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
       ),
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -116,7 +116,7 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
               ),
             ),
           ),
@@ -158,8 +158,8 @@ class _MyFormulaPageState extends State<MyFormulaPage> {
         },
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomNavigation(),
-      endDrawer: CustomDrawer(),
+      bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const CustomDrawer(),
     );
   }
 }

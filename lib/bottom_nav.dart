@@ -11,7 +11,7 @@ class BottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -22,7 +22,7 @@ class BottomNavigation extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -49,7 +49,7 @@ class BottomNavigation extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -75,7 +75,7 @@ class BottomNavigation extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -84,11 +84,11 @@ class BottomNavigation extends StatelessWidget {
                         builder: (context) => const FormulaPage()),
                   );
                 },
-                child: Column(
+                child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Icons.auto_stories),
+                    Icon(Icons.auto_stories),
                     Text(
                       "Formula",
                       style: TextStyle(fontSize: 9),
@@ -104,7 +104,7 @@ class BottomNavigation extends StatelessWidget {
                 builder: (BuildContext context) {
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -113,11 +113,11 @@ class BottomNavigation extends StatelessWidget {
                             builder: (context) => const HelpPage()),
                       );
                     },
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Icon(Icons.live_help_outlined),
+                        Icon(Icons.live_help_outlined),
                         Text(
                           "Help",
                           style: TextStyle(fontSize: 9),

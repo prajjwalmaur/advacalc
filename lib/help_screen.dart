@@ -81,22 +81,22 @@ class _HelpPageState extends State<HelpPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Table(
                 border: TableBorder.all(
-                  color: Color.fromARGB(255, 198, 198, 198),
+                  color: const Color.fromARGB(255, 198, 198, 198),
                   width: 1,
                 ),
-                children: [
+                children: const [
                   TableRow(
                     decoration: BoxDecoration(color: Colors.blue),
                     children: [
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Symbol',
                             style: TextStyle(
@@ -108,7 +108,7 @@ class _HelpPageState extends State<HelpPage> {
                       ),
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Description',
                             style: TextStyle(
@@ -120,7 +120,7 @@ class _HelpPageState extends State<HelpPage> {
                       ),
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Example',
                             style: TextStyle(
@@ -136,14 +136,14 @@ class _HelpPageState extends State<HelpPage> {
               ),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: symbol.length,
                 itemBuilder: (context, index) {
                   String key = symbol.keys.elementAt(index);
                   List<String> value = symbol[key]!;
                   return Table(
                     border: TableBorder.all(
-                      color: Color.fromARGB(255, 198, 198, 198),
+                      color: const Color.fromARGB(255, 198, 198, 198),
                       width: 1,
                     ),
                     children: [
@@ -154,7 +154,7 @@ class _HelpPageState extends State<HelpPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 key,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -164,7 +164,7 @@ class _HelpPageState extends State<HelpPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 value[0],
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -174,7 +174,7 @@ class _HelpPageState extends State<HelpPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 value[1],
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -185,19 +185,19 @@ class _HelpPageState extends State<HelpPage> {
                   );
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Table(
                 border: TableBorder.all(
-                  color: Color.fromARGB(255, 198, 198, 198),
+                  color: const Color.fromARGB(255, 198, 198, 198),
                   width: 1,
                 ),
-                children: [
-                  const TableRow(
+                children: const [
+                  TableRow(
                     decoration: BoxDecoration(color: Colors.blue),
                     children: [
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Function',
                             style: TextStyle(
@@ -209,7 +209,7 @@ class _HelpPageState extends State<HelpPage> {
                       ),
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Description',
                             style: TextStyle(
@@ -221,7 +221,7 @@ class _HelpPageState extends State<HelpPage> {
                       ),
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Example',
                             style: TextStyle(
@@ -237,14 +237,14 @@ class _HelpPageState extends State<HelpPage> {
               ),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   String key = data.keys.elementAt(index);
                   List<String> value = data[key]!;
                   return Table(
                     border: TableBorder.all(
-                      color: Color.fromARGB(255, 198, 198, 198),
+                      color: const Color.fromARGB(255, 198, 198, 198),
                       width: 1,
                     ),
                     children: [
@@ -255,7 +255,7 @@ class _HelpPageState extends State<HelpPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 key,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -265,7 +265,7 @@ class _HelpPageState extends State<HelpPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 value[0],
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -275,7 +275,7 @@ class _HelpPageState extends State<HelpPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 value[1],
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
@@ -290,8 +290,8 @@ class _HelpPageState extends State<HelpPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigation(),
-      endDrawer: CustomDrawer(),
+      bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const CustomDrawer(),
     );
   }
 }

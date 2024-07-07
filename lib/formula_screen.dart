@@ -21,9 +21,11 @@ class _FormulaPageState extends State<FormulaPage> {
 
   Future<void> loadMoreFormulas() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
+    // ignore: unrelated_type_equality_checks
     if (connectivityResult == ConnectivityResult.none) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No internet connection')),
+        const SnackBar(content: Text('No internet connection')),
       );
       return;
     }
@@ -43,10 +45,12 @@ class _FormulaPageState extends State<FormulaPage> {
       });
       // print(formulas);
     } else if (response.statusCode == 204) {
+      // ignore: use_build_context_synchronously
       showCustomSnackBar(context, "All formula downloaded");
     } else {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load formulas')),
+        const SnackBar(content: Text('Failed to load formulas')),
       );
     }
   }
@@ -64,7 +68,7 @@ class _FormulaPageState extends State<FormulaPage> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // SizedBox(height: 20),
           Padding(
@@ -81,11 +85,11 @@ class _FormulaPageState extends State<FormulaPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: loadMoreFormulas,
             child: const Text('Load More Formula'),
@@ -109,8 +113,8 @@ class _FormulaPageState extends State<FormulaPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigation(),
-      endDrawer: CustomDrawer(),
+      bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const CustomDrawer(),
     );
   }
 

@@ -3,10 +3,8 @@ import 'dart:convert';
 
 import 'package:advacalc/advan_screen.dart';
 import 'package:advacalc/snakbar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   String result = "0";
   Map<String, dynamic> data = {};
   bool mode = false;
+  // ignore: non_constant_identifier_names
   double screen_width = 0;
   bool clickResult = false;
   List<dynamic> buttons = [
@@ -96,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: IconButton(
                   iconSize: 15,
-                  icon: Icon(Icons.close, color: Colors.red),
+                  icon: const Icon(Icons.close, color: Colors.red),
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
@@ -143,12 +142,12 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   softWrap: true,
-                  "Value : ${result}",
+                  "Value : $result",
                   style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
                 ),
@@ -160,8 +159,8 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 30),
-                Container(
+                const SizedBox(height: 30),
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 80,
                   child: ElevatedButton(
                     onPressed: () {
@@ -171,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.deepPurple),
+                          WidgetStateProperty.all(Colors.deepPurple),
                     ),
                     child: const Text(
                       'Save',
@@ -289,8 +288,8 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   // color: Colors.amber,
                   padding: (orientation == Orientation.portrait)
-                      ? EdgeInsets.all(20)
-                      : EdgeInsets.all(1),
+                      ? const EdgeInsets.all(20)
+                      : const EdgeInsets.all(1),
                   alignment: Alignment.centerRight,
                   child: Text(
                     maxLines: fontSize == 20.sp ? 5 : 1,
@@ -310,8 +309,8 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           // color: Colors.blueAccent,
                           padding: (orientation == Orientation.portrait)
-                              ? EdgeInsets.all(20)
-                              : EdgeInsets.all(1),
+                              ? const EdgeInsets.all(20)
+                              : const EdgeInsets.all(1),
                           alignment: Alignment.centerRight,
                           child: Text(
                             softWrap: true,
@@ -327,16 +326,16 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () {
                                 _showStartDialog();
                               },
-                              icon: Icon(Icons.save)),
+                              icon: const Icon(Icons.save)),
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.white,
                     ),
                     Container(
                       padding: (orientation == Orientation.portrait)
-                          ? EdgeInsets.all(5)
-                          : EdgeInsets.all(1),
+                          ? const EdgeInsets.all(5)
+                          : const EdgeInsets.all(1),
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -361,9 +360,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget CustomBut(String text, double buttonHeight) {
     return InkWell(
-      hoverDuration: Duration(milliseconds: 200),
+      hoverDuration: const Duration(milliseconds: 200),
       splashColor: Colors.cyan,
       onTap: () {
         setState(() {
@@ -379,7 +379,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white.withOpacity(0.2),
               blurRadius: 4,
               spreadRadius: 0.5,
-              offset: Offset(-3, -3),
+              offset: const Offset(-3, -3),
             ),
           ],
         ),
@@ -456,7 +456,7 @@ class _HomePageState extends State<HomePage> {
       return eval.toString();
     } catch (e) {
       showCustomSnackBar(context, e.toString());
-      print(e.toString());
+      // print(e.toString());
       return "Not valid !!!";
     }
   }

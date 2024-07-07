@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'package:advacalc/bottom_nav.dart';
 import 'package:advacalc/cal_formula.dart';
-// import 'package:advacalc/cal_formula.dart';
 import 'package:advacalc/drawer.dart';
 import 'package:advacalc/help_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -89,19 +86,20 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
         });
 
         expres = expres.replaceAllMapped(
-            RegExp(r'log\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+            RegExp(r'log\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
           return 'log(10,${match.group(1)})';
         });
 
         expres = expres.replaceAllMapped(
-            RegExp(r'nrt\(([\da-zA-Z\s\+\*\-\/\(\)\{\}]+)\)'), (match) {
+            RegExp(r'nrt\(([\da-zA-Z\s\+\*\-\/\(\)\{\}\^]+)\)'), (match) {
           return 'nrt(2,${match.group(1)})';
         });
 
         expres = expres.replaceAll('e', '_');
         if (variables.contains('e')) {
           expres = expres.replaceAll(
-              RegExp(r'(?<=[\s\+\-\*\/(]|^)_(?=[\s\+\-\*\/)]|$)'), 'e(1)');
+              RegExp(r'(?<=[\s\+\-\*\/(\^\{]|^)_(?=[\s\+\-\*\/)\^\}]|$)'),
+              'e(1)');
           setState(() {
             variables.remove('e');
           });
@@ -138,7 +136,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
       _pref.setString("myFormula", jsonEncode(myFormula));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Formula saved successfully!")),
+        const SnackBar(content: Text("Formula saved successfully!")),
       );
       setState(() {
         expres = "";
@@ -163,14 +161,14 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Form(
@@ -179,7 +177,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                   children: [
                     TextFormField(
                       controller: _titleController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Enter Title',
                         border: OutlineInputBorder(),
                       ),
@@ -193,7 +191,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: _instructionController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Enter Instructions',
                         border: OutlineInputBorder(),
                       ),
@@ -206,8 +204,8 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      margin: EdgeInsets.all(10),
-                      padding: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -220,7 +218,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             softWrap: true,
                             "Take care of following things : ",
                             style: TextStyle(
@@ -228,51 +226,51 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 0, 0, 0)),
                           ),
-                          Text(
+                          const Text(
                             softWrap: true,
                             "1. Numbers ",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color.fromARGB(255, 0, 0, 0)),
                           ),
-                          Text(
+                          const Text(
                             softWrap: true,
                             "2. Variables names ",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color.fromARGB(255, 0, 0, 0)),
                           ),
-                          Text(
+                          const Text(
                             softWrap: true,
                             "3. Operators ",
                             style: TextStyle(
                                 fontSize: 16,
-                                color: const Color.fromARGB(255, 0, 0, 0)),
+                                color: Color.fromARGB(255, 0, 0, 0)),
                           ),
-                          Text(
+                          const Text(
                             softWrap: true,
                             "4. Parentheses brackets ( ) ",
                             style: TextStyle(
                                 fontSize: 16,
-                                color: const Color.fromARGB(255, 0, 0, 0)),
+                                color: Color.fromARGB(255, 0, 0, 0)),
                           ),
-                          Text(
+                          const Text(
                             softWrap: true,
                             "E.g. : 2 * ( lenth + width ) \nFor exponentiation: 2^3 which should result in 8 \nFor square root: sqrt(16) which should result in 4\nFor Modulus: abs(-5) which should result in 5\nFor subtraction: 5-2 which should result in 3\nFor multiplication: 3*4 which should result in 12\nFor division: 10/2 which should result in 5\nYou can also use sqrt, sin, cos, tan, log, etc.",
                             style: TextStyle(
                                 fontSize: 14,
-                                color: const Color.fromARGB(255, 0, 0, 0)),
+                                color: Color.fromARGB(255, 0, 0, 0)),
                           ),
                           RichText(
-                            text: new TextSpan(
+                            text: TextSpan(
                               children: [
-                                new TextSpan(
+                                const TextSpan(
                                   text: 'You can also take ',
-                                  style: new TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.black),
                                 ),
-                                new TextSpan(
+                                TextSpan(
                                   text: 'Help.',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline),
@@ -289,7 +287,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                               ],
                             ),
                           ),
-                          Row(
+                          const Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -332,12 +330,12 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextFormField(
                       controller: _expController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Enter Expression',
                         border: OutlineInputBorder(),
                       ),
@@ -359,8 +357,8 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
               const SizedBox(height: 20),
               if (variables.isNotEmpty)
                 Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -373,7 +371,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             softWrap: true,
                             "Extracted Variables: ",
                             style: TextStyle(
@@ -387,7 +385,7 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
                               return Text(
                                 "${i + 1}. ${variables[i]}",
                                 softWrap: true,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Color.fromARGB(255, 0, 0, 0),
                                 ),
@@ -429,8 +427,8 @@ class _CreateFormulaPageState extends State<CreateFormulaPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigation(),
-      endDrawer: CustomDrawer(),
+      bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const CustomDrawer(),
     );
   }
 }
